@@ -47,6 +47,7 @@ walk_h=50
 
 walk_speed=0.02
 
+# 0 串联腿 1 并联腿
 ma_case=0
 
 trot_cg_f=4

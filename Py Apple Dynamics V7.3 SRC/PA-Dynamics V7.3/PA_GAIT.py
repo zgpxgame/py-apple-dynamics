@@ -2,6 +2,10 @@ import padog
 import PA_STABLIZE
 from math import pi,tan
 
+#######################
+# 步态
+#######################
+
 x1=0;x2=0;x3=0;x4=0;y1=0;y2=0;y3=0;y4=0
 
 def pit_cause_cg_adjust(sita,h,Kp):
@@ -14,7 +18,11 @@ def foward_cg_stab(r1,r4,r2,r3,gait_need,enable):
     if PA_STABLIZE.gyro_cal_sta==1:   #等待gyro校准完成
       gyro_p=PA_STABLIZE.filter_data_p
       padog.X_goal=padog.in_y+gait_need+pit_cause_cg_adjust((gyro_p-PA_STABLIZE.p_origin)*pi/180,110,1.1)+PA_STABLIZE.gyro_x_fitted*5
-      
+
+
+#
+# 步态：小步跑  
+#     
 def trot(t,x_target,z_target,r1,r4,r2,r3):
   global x1,x2,x3,x4,y1,y2,y3,y4
   Tf=0.5
@@ -35,9 +43,10 @@ def trot(t,x_target,z_target,r1,r4,r2,r3):
     y1=phase_2_support[1];y2=phase_2_swing[1];y3=phase_2_support[1];y4=phase_2_swing[1]
   return x1,x2,x3,x4,y1,y2,y3,y4
 
-
-
-def walk(t,x_target,z_target,r1,r4,r2,r3):
+# 
+# 步态：行走，比trot慢？
+#
+def watrlk(t,x_target,z_target,r1,r4,r2,r3):
   global x1,x2,x3,x4,y1,y2,y3,y4
   Tf=0.5
   #陀螺仪引入

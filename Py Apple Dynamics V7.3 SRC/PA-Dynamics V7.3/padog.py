@@ -239,7 +239,9 @@ def read_voltage(x):   #电压拟合
   p1 = 0.002575
   p2 = 0.7446
   return p1*x + p2
-  
+
+# ham 大腿
+# shank 小腿  
 def servo_output(case,init,ham1,ham2,ham3,ham4,shank1,shank2,shank3,shank4):
   if case==0 and init==0:
     #腿1

@@ -1,5 +1,9 @@
 from math import sin,cos,pi
 
+#######################
+# 姿势
+#######################
+
 def cal_ges(PIT,ROL,l,b,w,x,Hc):
     YA=0
     P=PIT*pi/180

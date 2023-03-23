@@ -24,6 +24,7 @@ def loop(t):
       padog.height(110)
       padog.X_goal=padog.in_y
   
+    # 配置保存后重新初始化循环
     if padog.loop_speed_mode_sc==1:
       if padog.loop_speed_mode==0:
         print("Loop mode 1")
@@ -45,9 +46,13 @@ def app_1():
 t.init(period=5,mode=Timer.PERIODIC,callback=loop)
 padog.loop_speed_mode_sc=0
 
+# time.sleep 时，loop是否会执行？
+
+# 开机启动铃声
 padog.start_ring()
-#WIFI热点模式
-padog.do_connect_AP()    
+# 开启WIFI热点模式，等待连接
+padog.do_connect_AP()  
+# 启动Web服务，用于接收手机控制命令
 _thread.stack_size(1024*10)
 _thread.start_new_thread(app_1, ())
 
