@@ -150,7 +150,7 @@ alarm_per=0
 alarm_per_add=0
 alarm_time_per=0
 loop_speed_mode=0   #0常规loop,5ms一次,1校准loop,100ms一次
-loop_speed_mode_sc=0
+loop_speed_mode_sc=0 #等于1时，需要重置loop时间间隔
 
 def alarm_run():
   global alarm_flash_node,alarm_per_add
@@ -243,6 +243,18 @@ def read_voltage(x):   #电压拟合
 # ham 大腿
 # shank 小腿  
 def servo_output(case,init,ham1,ham2,ham3,ham4,shank1,shank2,shank3,shank4):
+
+  # 貌似缺少并联腿的逻辑
+
+  # 俯视图
+  #
+  #      头
+  #   腿1  腿2
+  #   腿4  腿3
+  #      尾
+  #
+  # 串联腿且舵机已标定完成
+  #
   if case==0 and init==0:
     #腿1
     PA_SERVO.angle(2, init_1h+90-ham1)  # 腿1大腿
@@ -256,6 +268,10 @@ def servo_output(case,init,ham1,ham2,ham3,ham4,shank1,shank2,shank3,shank4):
     #腿4
     PA_SERVO.angle(5, init_4h+90-ham4)  # 腿4大腿
     PA_SERVO.angle(4, (init_4s-90)+mechan_offset_corr(shank4))  # 腿4小腿
+  
+  #
+  # 非串联腿，或串联腿标定舵机中
+  #
   else:
     #腿1
     PA_SERVO.angle(2, init_1h)  # 腿1大腿
@@ -309,7 +325,7 @@ def servo_init(key):
     global init_case
     init_case=key
     
-def gait(mode):   #设置步态
+def gait(mode):   #设置步态 gait_mode: 0 trot，1 walk
     global gait_mode
     gait_mode=mode
   
@@ -388,6 +404,7 @@ def mainloop():
   global ges_x_1,ges_x_2,ges_x_3,ges_x_4
   global ges_y_1,ges_y_2,ges_y_3,ges_y_4
   global IK_ERROR
+
   #Servo ON/OFF CONTROL
   if alarm_and_servo_control()==0:
     pin_servo_vol.value(1)
@@ -397,7 +414,9 @@ def mainloop():
   #锁定(因为摇晃身体做动作)
   if stop_run_node==1:
     return 0
+  
   #判断步态模式
+  #gait_mode: 0 trot，1 walk
   if gait_mode==0:
     act_tran_mov_kp=tran_mov_kp
     if t>=1:#一个完整的运动周期结束 trot

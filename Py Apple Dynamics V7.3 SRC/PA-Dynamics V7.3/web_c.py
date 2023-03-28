@@ -17,6 +17,44 @@ s.listen(1)             #设置允许连接的客户端数量
 print('控制网页地址:', addr)
 padog.gesture(Pitch,Roll,Yst)
 
+##
+## 控制
+## ====
+# 1.进入控制页面
+# 2.读取控制页面请求参数 req_data
+# key ss 标定：重置padog姿态，循环模式后，进入标定页面，
+#    gc 关闭陀螺仪
+#    go 打开陀螺仪
+#    g0 步态 trot
+#    g1 步态 walk
+#    sc 保存配置
+#    sf 踏步开
+#    sn 踏步关
+# pit
+# rol
+# hgt
+# yst
+# f | t 遥杆
+#
+# 3.移动控制 padog.move
+
+
+##
+## 标定
+## ====
+#  命令
+#    l1 leg1 腿 1
+#    l2 leg2 腿 2
+#    l3 leg3 腿 3
+#    l4 leg4 腿 4
+#    sd shank dec 小腿- 
+#    hd ham dec 大腿-
+#    si shank inc 小腿+
+#    hi ham inc 大腿+
+#    t9 开始标定
+#    sc save config 保存并退出
+
+
 while True:
   cl, addr = s.accept() #接受客户端的连接请求，cl为此链接创建的一个新的scoket对象，addr客户端地址
   #print('client connected from:', addr)
@@ -31,6 +69,10 @@ while True:
   else:
     req_data=req_data.replace('get/?','').replace('http/1.1','').replace("b'","")
     print('req_data',req_data)
+    ######################## 控制 egin ############################ 
+    ## 解析、执行控制命令
+
+    # 
     if req_data.find('speed')>-1:
       print(req_data.replace('&',';'))
       exec(req_data.replace('&',';'))
@@ -52,6 +94,7 @@ while True:
       padog.trot_cg_f=trot_cg_f
       padog.trot_cg_b=trot_cg_b
       padog.trot_cg_t=trot_cg_t
+
     #判断摇杆
     index_f = req_data.find('f=')
     index_find_t = req_data.find('t=')
@@ -63,9 +106,11 @@ while True:
       turn=int(value_t)
     except:
       pass
+
     #判断按钮
     index = req_data.find('key=')
     value = req_data[index+4:index+6].lstrip().rstrip()
+
     #Pitch
     if req_data.find('pit=')>-1:
       index_p = req_data.find('pit=')
@@ -73,6 +118,7 @@ while True:
       if value_p!='/':
         print('pit:',str(value_p))
         Pitch=int(value_p)
+
     #Roll
     if req_data.find('rol=')>-1:
       index_r = req_data.find('rol=')
@@ -80,6 +126,7 @@ while True:
       if value_r!='/':
         #print('rol:',str(value_r))
         Roll=int(value_r)
+
     #Height
     if req_data.find('hgt=')>-1:
       index_h = req_data.find('hgt=')
@@ -87,6 +134,7 @@ while True:
       if value_h!='/':
         print('hgt:',str(value_h))
         Hgt=int(value_h)
+
     #Y_controller
     if req_data.find('yst=')>-1:
       index_y = req_data.find('yst=')
@@ -94,14 +142,22 @@ while True:
       if value_y!='/':
         print('yst:',str(value_y))
         Yst=int(value_y)
+
     #运动控制用
+    #切换到舵机标定页面
     elif value == 'ss':
-      Pitch=0;Roll=0          #清除姿态
-      #padog.stable(False)     #清除陀螺仪
-      padog.gait(0)           #重置步态模式
+      #清除姿态
+      Pitch=0;Roll=0          
+      #清除陀螺仪
+      #padog.stable(False)     
+      #重置步态模式
+      padog.gait(0)
+      #设置接下来要发送的页面为标定页面           
       url_n=url_cal
+      # 将loop重置为标定模式（重新初始化loop的时间间隔）
       padog.loop_speed_mode=1
       padog.loop_speed_mode_sc=1
+
       step_state=0
     elif value == 'go':
       print('True')
@@ -110,8 +166,10 @@ while True:
       print('False')
       padog.stable(False)
     elif value == 'sn':
+      # 踏步关
       step_state=1
     elif value == 'sf':
+      # 踏步开
       step_state=0
     elif value == 'g0':
       padog.alarm(50,500,600)
@@ -125,7 +183,10 @@ while True:
       padog.stable(False)
       padog.gait(1)
       padog.alarm(0,0,0)
-    #标定判断用
+    ######################## 控制 end ############################ 
+
+    ######################## 标定 begin ############################  
+    # 解析并执行标定命令
     if value == 'l2':
       user_leg_num='2'
       color_leg1='#FF9E9E';color_leg2='#7DFF7D';color_leg3='#FF9E9E';color_leg4='#FF9E9E'
@@ -186,9 +247,27 @@ while True:
       exec("padog.init_"+user_leg_num+"s="+"padog.init_"+user_leg_num+"s-1")
     elif value == 't9':
       padog.servo_init(1)
-      
+    ######################## 标定 end ############################  
+
+  ##
+  ## 发送当前页面
+  ##    
   with open(url_n, 'r') as f:
-    while(req_data.find('speed')>-1 or (req_data.find('f=')==-1 and req_data.find('g0')==-1 and req_data.find('g1')==-1 and req_data.find('sn')==-1 and req_data.find('sf')==-1 and req_data.find('go')==-1 and req_data.find('gc')==-1 and req_data.find('pit=')==-1 and req_data.find('rol=')==-1 and req_data.find('yst=')==-1 and req_data.find('hgt=')==-1)):
+    #
+    # 读取html文件，并发送到客户端
+    #
+    while(req_data.find('speed')>-1 
+          or (req_data.find('f=')==-1 
+              and req_data.find('g0')==-1 
+              and req_data.find('g1')==-1 
+              and req_data.find('sn')==-1 
+              and req_data.find('sf')==-1 
+              and req_data.find('go')==-1 
+              and req_data.find('gc')==-1 
+              and req_data.find('pit=')==-1 
+              and req_data.find('rol=')==-1 
+              and req_data.find('yst=')==-1 
+              and req_data.find('hgt=')==-1)):
       out=f.read(500)
       if out:
         padog.alarm(10,50,100)
@@ -208,7 +287,10 @@ while True:
         """)
         except:pass
         break
-
+    
+    #
+    # 如果当前请求的是标定页面，额外发送标定相关页面内容
+    #
     if url_n=="cal.html":
       try:
         cl.sendall("""
@@ -258,9 +340,12 @@ while True:
             </html>
             """)
       except:print("Web Return False")
-  cl.close()          #关闭socket
+  cl.close()
   
-  #命令
+  ##
+  ## 执行控制命令
+  ##
+  # clamp thr to range [-3, +3]
   if thr>=3:   #最高3
     thr=3
   elif thr<=-3:
@@ -273,12 +358,15 @@ while True:
     L=1;R=1
     
   #Judge current mode
+  # 0:网页 1:航模遥控 2:串口
   if padog.CC_M==0:
     if thr==0:
       padog.spd_goal=0
       if step_state==1:
+        # 踏步关，向前移动
         padog.move(0,1,1)
       elif abs(0-padog.spd)<=1:    #赋予减速过程
+        # 踏步开，原地踏步
         padog.move(0,0,0)
     else:
       padog.move(thr,L,R)

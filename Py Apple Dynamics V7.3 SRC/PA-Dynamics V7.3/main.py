@@ -15,10 +15,14 @@ def loop(t):
     global c_loop_speed_mode
     padog.mainloop()
     padog.alarm_run()
+
+    # 航模遥控控制
     if padog.CC_M==1:
       padog.remote_run()
       padog.height(110)
       padog.X_goal=padog.in_y
+
+    # 串口控制  
     elif padog.CC_M==2:
       padog.UART_Run()
       padog.height(110)

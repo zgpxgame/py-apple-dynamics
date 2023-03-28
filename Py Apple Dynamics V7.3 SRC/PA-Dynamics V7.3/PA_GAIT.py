@@ -28,23 +28,44 @@ def trot(t,x_target,z_target,r1,r4,r2,r3):
   Tf=0.5
   #陀螺仪引入
   foward_cg_stab(r1,r4,r2,r3,0,padog.key_stab)
+
+  # t从0到1是脚的一个完整的运动周期
+  # t < 0.5 前半个周期
+  # t>=0.5 后半个周期
+
   if t<Tf:
     phase_1_swing=padog.swing_curve_generate(t,Tf,x_target,z_target,0,0,0)
     phase_1_support=padog.support_curve_generate(0.5+t,Tf,x_target,0.5,0)
     #TROT
-    x1=phase_1_swing[0]*r1;x2=phase_1_support[0]*r2;x3=phase_1_swing[0]*r3;x4=phase_1_support[0]*r4
-    y1=phase_1_swing[1];y2=phase_1_support[1];y3=phase_1_swing[1];y4=phase_1_support[1]
+    x1=phase_1_swing[0]*r1
+    x2=phase_1_support[0]*r2
+    x3=phase_1_swing[0]*r3
+    x4=phase_1_support[0]*r4
+
+    y1=phase_1_swing[1]
+    y2=phase_1_support[1]
+    y3=phase_1_swing[1]
+    y4=phase_1_support[1]
     
   if t>=Tf:
     phase_2_swing=padog.swing_curve_generate(t-0.5,Tf,x_target,z_target,0,0,0)
     phase_2_support=padog.support_curve_generate(t,Tf,x_target,0.5,0)
     #TROT
-    x1=phase_2_support[0]*r1;x2=phase_2_swing[0]*r2;x3=phase_2_support[0]*r3;x4=phase_2_swing[0]*r4
-    y1=phase_2_support[1];y2=phase_2_swing[1];y3=phase_2_support[1];y4=phase_2_swing[1]
+    x1=phase_2_support[0]*r1
+    x2=phase_2_swing[0]*r2
+    x3=phase_2_support[0]*r3
+    x4=phase_2_swing[0]*r4
+
+    y1=phase_2_support[1]
+    y2=phase_2_swing[1]
+    y3=phase_2_support[1]
+    y4=phase_2_swing[1]
+
+  
   return x1,x2,x3,x4,y1,y2,y3,y4
 
 # 
-# 步态：行走，比trot慢？
+# 步态：慢行走，比trot慢
 #
 def watrlk(t,x_target,z_target,r1,r4,r2,r3):
   global x1,x2,x3,x4,y1,y2,y3,y4
