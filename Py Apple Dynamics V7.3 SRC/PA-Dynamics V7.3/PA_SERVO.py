@@ -3,6 +3,10 @@ from machine import Pin
 import ustruct
 import time
 
+#
+# PCA9685驱动
+#    https://github.com/SingTown/singtown-micropython-lib/tree/master/pca9685
+#
 class PCA9685:
     def __init__(self, i2c, address=0x40):
         self.i2c = i2c
@@ -61,7 +65,9 @@ class PCA9685:
 
 
 
-
+#
+# 基于PCA9685的舵机驱动
+#
 class Servos:
     def __init__(self, i2c, address=0x40, freq=50, min_us=500, max_us=2500,  #根据舵机参数自行设置
                  degrees=180):
@@ -98,10 +104,13 @@ class Servos:
         int_dutu=int(duty)
         self.pca9685.duty(index, int_dutu)
 
+
 servos = Servos(SoftI2C(scl=Pin(19), sda=Pin(18), freq=100000), address=0x40) #舵机控制板(集成)
+
 
 def angle(pin_num,degrees):            #设置舵机角度
     servos.position(pin_num, degrees)
+
 
 def release():
     for i in range(0,15):

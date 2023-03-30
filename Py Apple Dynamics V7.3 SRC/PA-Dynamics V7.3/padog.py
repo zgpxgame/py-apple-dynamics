@@ -211,6 +211,9 @@ def do_connect_AP():
   alarm(0,0,0)
 
 #=============一些中间或初始变量=============
+GAIT_MODE_TROT = 0
+GAIT_MODE_WALK = 1
+
 t=0
 init_x=0;init_y=-110
 ges_x_1=0;ges_x_2=0;ges_x_3=0;ges_x_4=0
@@ -220,7 +223,7 @@ PIT_S=0;ROL_S=0;X_S=0;PIT_goal=0;ROL_goal=0;X_goal=0
 spd=0;spd_goal=0;L=0;R=0
 R_H=abs(init_y);H_goal=110
 init_case=0
-key_stab=False;gait_mode=0
+key_stab=False;gait_mode=GAIT_MODE_TROT
 stop_run_node=0
 speed_init=speed
 acc_z=0
@@ -242,7 +245,7 @@ def read_voltage(x):   #电压拟合
 
 # ham 大腿
 # shank 小腿  
-def servo_output(case,init,ham1,ham2,ham3,ham4,shank1,shank2,shank3,shank4):
+def servo_output(init,ham1,ham2,ham3,ham4,shank1,shank2,shank3,shank4):
 
   # 貌似缺少并联腿的逻辑
 
@@ -255,7 +258,7 @@ def servo_output(case,init,ham1,ham2,ham3,ham4,shank1,shank2,shank3,shank4):
   #
   # 串联腿且舵机已标定完成
   #
-  if case==0 and init==0:
+  if init==0:
     #腿1
     PA_SERVO.angle(2, init_1h+90-ham1)  # 腿1大腿
     PA_SERVO.angle(3, (init_1s-90)+mechan_offset_corr(shank1))  # 腿1小腿
@@ -416,8 +419,7 @@ def mainloop():
     return 0
   
   #判断步态模式
-  #gait_mode: 0 trot，1 walk
-  if gait_mode==0:
+  if gait_mode==GAIT_MODE_TROT:
     act_tran_mov_kp=tran_mov_kp
     if t>=1:#一个完整的运动周期结束 trot
       t=0
@@ -426,7 +428,7 @@ def mainloop():
     else:
      t=t+speed
     P_=PA_GAIT.trot(t,spd*10,h,L,L,R,R)
-  elif gait_mode==1:
+  elif gait_mode==GAIT_MODE_WALK:
     act_tran_mov_kp=tran_mov_kp/2   #Walk Gait Slow down X_S change
     P_=PA_GAIT.walk(t,spd*10,h,L,L,R,R)
     if t>=2.5:
@@ -474,7 +476,7 @@ def mainloop():
   if ROL_S<=-rol_max_ang:ROL_S=-rol_max_ang
 
   #TROT模态根据迈腿长度自动调节重心
-  if gait_mode==0:
+  if gait_mode==GAIT_MODE_TROT:
     if spd>=0 and (L+R)!=0:
       P_G=PA_ATTITUDE.cal_ges(PIT_S,ROL_S,l,b,w,X_S+abs(spd)*trot_cg_f,R_H)
     elif spd<0 and (L+R)!=0:
@@ -483,7 +485,10 @@ def mainloop():
       P_G=PA_ATTITUDE.cal_ges(PIT_S,ROL_S,l,b,w,X_S+abs(spd)*trot_cg_t,R_H)
   else:
     P_G=PA_ATTITUDE.cal_ges(PIT_S,ROL_S,l,b,w,X_S,R_H)
-  ges_x_1=P_G[0];ges_x_2=P_G[1]; ges_x_3=P_G[2]; ges_x_4=P_G[3];ges_y_1=P_G[4];ges_y_2=P_G[5]; ges_y_3=P_G[6]; ges_y_4=P_G[7]
+
+  ges_x_1=P_G[0];ges_x_2=P_G[1]; ges_x_3=P_G[2]; ges_x_4=P_G[3]
+  ges_y_1=P_G[4];ges_y_2=P_G[5]; ges_y_3=P_G[6]; ges_y_4=P_G[7]
+
   #自稳调节器(只静态稳定)
   #
   if key_stab==True:
@@ -492,10 +497,17 @@ def mainloop():
     else:   #进入TROT模式
       PIT_goal=0
       ROL_goal=0
+
   #作动
   try:
-    A_=PA_IK.ik(ma_case,l1,l2,P_[0]+ges_x_1,P_[1]+ges_x_2,P_[2]+ges_x_3,P_[3]+ges_x_4,P_[4]+ges_y_1,P_[5]+ges_y_2,P_[6]+ges_y_3,P_[7]+ges_y_4)
-    servo_output(ma_case,init_case,A_[0],A_[1],A_[2],A_[3],A_[4],A_[5],A_[6],A_[7])
+    A_=PA_IK.ik(l1,l2,
+                P_[0]+ges_x_1,P_[1]+ges_x_2,P_[2]+ges_x_3,P_[3]+ges_x_4,
+                P_[4]+ges_y_1,P_[5]+ges_y_2,P_[6]+ges_y_3,P_[7]+ges_y_4)
+
+    servo_output(init_case,
+                 A_[0],A_[1],A_[2],A_[3],
+                 A_[4],A_[5],A_[6],A_[7])
+
     IK_ERROR=0
   except:
     IK_ERROR=1
