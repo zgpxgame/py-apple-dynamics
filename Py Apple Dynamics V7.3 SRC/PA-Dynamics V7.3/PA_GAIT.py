@@ -34,7 +34,15 @@ def foward_cg_stab(r1, r4, r2, r3, gait_need, enable):
 
 #
 # 步态：小步跑  
-#     
+#
+# r1, r4, r2, r3 控制方向
+#   1  1  1  1 前进
+#  -1 -1 -1 -1 后退
+#  -1 -1  1  1 左转
+#   1  1 -1 -1 右转
+#  x_target x前进距离
+#  z_target 抬腿最大高度
+#
 def trot(t, x_target, z_target, r1, r4, r2, r3):
     global x1, x2, x3, x4, y1, y2, y3, y4
     Tf = 0.5
