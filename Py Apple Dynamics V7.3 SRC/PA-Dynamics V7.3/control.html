@@ -1,11 +1,12 @@
 <!DOCTYPE HTML>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <html lang="zh-CN">
 <html>
-	<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+<head>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes"/>
     <title>菠萝万能控 V7.3</title>
-		<style>
+    <style>
 *
 {
 	box-sizing: border-box;
@@ -29,8 +30,9 @@
 }
 
 .dimSlide { transform: scaleX(2) rotate(0deg); width: 200px;position: relative}
-		</style>
-<script language="javascript">
+
+    </style>
+    <script language="javascript">
 var JoyStick = (function(container, parameters)
 {
 	parameters = parameters || {};
@@ -330,42 +332,61 @@ function save_para()
        setTimeout(function(){oDiv.value="保存为默认重心位置";oDiv.style.backgroundColor='#FF9E9E'},2000);
     }
 }
-</script> 
-	</head>
-	<center><h1>菠萝万能控 7.3</h1></center>
-<center><h3>By 灯哥</h3></center>
-	<center><body>
-		<!-- Example of two JoyStick integrated in the page structure -->
-		<div class="row">
-			<div class="columnLateral">
-				<div id="joy1Div" style="width:200px;height:200px;margin:10px"></div>
-				转向(%) :<input id="joy1X" type="text" style="border-style:none;width:30px;" /></br>
-				前后(%) :<input id="joy1Y" type="text" style="border-style:none;width:30px;" />
-			</div></center>
-<br />
-<b><center>(- 俯仰角 +):<input id="Pitch_angle" type="text" style="border-style:none;width:25px;" />度</br></b>
-<center><input class= "dimSlide" type="range" id="dimSlide1" min="-10" max="10" step="0" value="0" onclick="dimSetp(event)" oninput="dimSetp(event)"></center>
-<b><center>(- 滚转角 +):<input id="Roll_angle" type="text" style="border-style:none;width:25px;" />度</br></b>
-<center><input class= "dimSlide" type="range" id="dimSlide2" min="-10" max="10" step="0" value="0" onclick="dimSetr(event)" oninput="dimSetr(event)"></center>
-<b><center>(- 后前平移 +):<input id="for_bac_mov" type="text" style="border-style:none;width:25px;" />毫米</br></b>
-<center><input class= "dimSlide" type="range" id="dimSlide3" min="-40" max="40" step="0" value="0" onclick="dimSety(event)"  oninput="dimSety(event)"></center>
-<b><center>(- 高度调节 +):<input id="height_adjust" type="text" style="border-style:none;width:30px;" />毫米</br></b>
-<center><input class= "dimSlide" type="range" id="dimSlide4" min="90" max="120" step="0" value="110" onclick="dimSeth(event)" oninput="dimSeth(event)" ></center>
 
-<br />
-<br />
-<center><input type="button" style="width:200px; height:30px;background-color:#FF9E9E" id="para_set" value="保存为默认重心位置" onclick="save_para()" /></center>
-<br />
+    </script>
+</head>
+<center><h1>菠萝万能控 7.3</h1></center>
+<center><h3>By 灯哥</h3></center>
+<center>
+    <body>
+    <!-- Example of two JoyStick integrated in the page structure -->
+    <div class="row">
+        <div class="columnLateral">
+            <div id="joy1Div" style="width:200px;height:200px;margin:10px"></div>
+            转向(%) :<input id="joy1X" type="text" style="border-style:none;width:30px;"/></br>
+            前后(%) :<input id="joy1Y" type="text" style="border-style:none;width:30px;"/>
+        </div>
+</center>
+<br/>
+<b>
+    <center>(- 俯仰角 +):<input id="Pitch_angle" type="text" style="border-style:none;width:25px;"/>度</br>
+</b>
+<center><input class="dimSlide" type="range" id="dimSlide1" min="-10" max="10" step="0" value="0"
+               onclick="dimSetp(event)" oninput="dimSetp(event)"></center>
+<b>
+    <center>(- 滚转角 +):<input id="Roll_angle" type="text" style="border-style:none;width:25px;"/>度</br>
+</b>
+<center><input class="dimSlide" type="range" id="dimSlide2" min="-10" max="10" step="0" value="0"
+               onclick="dimSetr(event)" oninput="dimSetr(event)"></center>
+<b>
+    <center>(- 后前平移 +):<input id="for_bac_mov" type="text" style="border-style:none;width:25px;"/>毫米</br>
+</b>
+<center><input class="dimSlide" type="range" id="dimSlide3" min="-40" max="40" step="0" value="0"
+               onclick="dimSety(event)" oninput="dimSety(event)"></center>
+<b>
+    <center>(- 高度调节 +):<input id="height_adjust" type="text" style="border-style:none;width:30px;"/>毫米</br>
+</b>
+<center><input class="dimSlide" type="range" id="dimSlide4" min="90" max="120" step="0" value="110"
+               onclick="dimSeth(event)" oninput="dimSeth(event)"></center>
+
+<br/>
+<br/>
+<center><input type="button" style="width:200px; height:30px;background-color:#FF9E9E" id="para_set"
+               value="保存为默认重心位置" onclick="save_para()"/></center>
+<br/>
 <center><a style="width:200px; height:50px;" href="?key=ss">
-    <button style="width:200px; height:50px;"> 标定及设置 </button>
+    <button style="width:200px; height:50px;"> 标定及设置</button>
 </a></center>
-<br />
-<center><input type="button" style="width:200px; height:30px;background-color:#FF9E9E" id="gyro_sw" value="陀螺仪：关" onclick="show_gyro()" /></center>
-<br />
-<center><input type="button" style="width:200px; height:30px;background-color:#FF9E9E" id="step_sw" value="踏步：关" onclick="show_step()" /></center>
-<br />
-<center><input type="button" style="width:200px; height:30px;background-color:#68C3FF" id="gait_sw" value="步态：TROT" onclick="show_gait()" /></center>
-<br />
+<br/>
+<center><input type="button" style="width:200px; height:30px;background-color:#FF9E9E" id="gyro_sw" value="陀螺仪：关"
+               onclick="show_gyro()"/></center>
+<br/>
+<center><input type="button" style="width:200px; height:30px;background-color:#FF9E9E" id="step_sw" value="踏步：关"
+               onclick="show_step()"/></center>
+<br/>
+<center><input type="button" style="width:200px; height:30px;background-color:#68C3FF" id="gait_sw" value="步态：TROT"
+               onclick="show_gait()"/></center>
+<br/>
 </body>
 
 <script type="text/javascript">
@@ -382,9 +403,9 @@ var http_send_state=0;
 var xmlhttp1=new XMLHttpRequest();
 Pitch_angle.value=dimSlide1.value;Roll_angle.value=dimSlide2.value;for_bac_mov.value=dimSlide3.value;height_adjust.value=dimSlide4.value;
 setInterval(function(){if(http_send_state==0){joy1X.value=Joy1.GetX();joy1Y.value=Joy1.GetY(); xmlhttp1.open("GET","f="+joy1Y.value+"t="+joy1X.value,true); xmlhttp1.send();}}, 700);
+
 </script>
-		
-		
+
 
 </html>
 

@@ -1,10 +1,10 @@
-#Copyright Deng（灯哥） (ream_d@yeah.net)  Py-apple dog project
-#Github:https://github.com/ToanTech/py-apple-quadruped-robot
-#Licensed under the Apache License, Version 2.0 (the "License");
-#you may not use this file except in compliance with the License.
-#You may obtain a copy of the License at:http://www.apache.org/licenses/LICENSE-2.0
+# Copyright Deng（灯哥） (ream_d@yeah.net)  Py-apple dog project
+# Github:https://github.com/ToanTech/py-apple-quadruped-robot
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at:http://www.apache.org/licenses/LICENSE-2.0
 
-from math import asin,acos,atan,pi,sqrt
+from math import acos, atan, pi, sqrt
 
 #######################
 # 逆运动学
