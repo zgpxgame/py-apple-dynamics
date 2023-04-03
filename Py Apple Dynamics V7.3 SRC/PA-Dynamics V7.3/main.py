@@ -11,6 +11,8 @@ t = Timer(1)
 
 c_loop_speed_mode = 0
 
+# /dev/cu.usbserial-14120
+
 
 def loop(t):
     # LOOP JUDGE
